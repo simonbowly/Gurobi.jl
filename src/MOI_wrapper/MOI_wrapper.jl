@@ -97,12 +97,13 @@ mutable struct Env
     finalize_called::Bool
     attached_models::Int
 
-    function Env()
+    function Env(::MOI.Silent, flag::Bool)
         a = Ref{Ptr{Cvoid}}()
         ret = GRBemptyenv(a)
         env = new(a[], false, 0)
         _check_ret(env, ret)
-        ret = GRBsetintparam(env.ptr_env, GRB_INT_PAR_OUTPUTFLAG, 0)
+        output_flag = flag ? 0 : 1
+        ret = GRBsetintparam(env.ptr_env, GRB_INT_PAR_OUTPUTFLAG, output_flag)
         _check_ret(env, ret)
         ret = GRBstartenv(env.ptr_env) 
         finalizer(env) do e
@@ -117,6 +118,9 @@ mutable struct Env
         _check_ret(env, ret)
         return env
     end
+
+    Env() = Env(MOI.Silent(), false)
+
 end
 
 Base.cconvert(::Type{Ptr{Cvoid}}, x::Env) = x
