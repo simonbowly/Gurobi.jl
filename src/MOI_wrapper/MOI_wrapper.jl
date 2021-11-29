@@ -99,8 +99,12 @@ mutable struct Env
 
     function Env()
         a = Ref{Ptr{Cvoid}}()
-        ret = GRBloadenv(a, C_NULL)
+        ret = GRBemptyenv(a)
         env = new(a[], false, 0)
+        _check_ret(env, ret)
+        ret = GRBsetintparam(env.ptr_env, GRB_INT_PAR_OUTPUTFLAG, 0)
+        _check_ret(env, ret)
+        ret = GRBstartenv(env.ptr_env) 
         finalizer(env) do e
             e.finalize_called = true
             if e.attached_models == 0
