@@ -256,3 +256,4 @@ You need to set the NonConvex parameter:
 model = Model(Gurobi.Optimizer)
 set_optimizer_attribute(model, "NonConvex", 2)
 ```
+trigger
