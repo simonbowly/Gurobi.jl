@@ -36,7 +36,7 @@ function runtests()
     return
 end
 
-const GRB_ENV = isdefined(Main, :GRB_ENV) ? Main.GRB_ENV : Gurobi.Env()
+const GRB_ENV = isdefined(Main, :GRB_ENV) ? Main.GRB_ENV : Gurobi.Env(MOI.Silent(), true)
 
 function test_runtests()
     model =
@@ -204,7 +204,7 @@ function test_MULTI_ENV_automatic_env_empty()
 end
 
 function test_MULTI_ENV_manual_finalize()
-    env = Gurobi.Env()
+    env = Gurobi.Env(MOI.Silent(), true)
     model = Gurobi.Optimizer(env)
     finalize(env)
     @test env.finalize_called
